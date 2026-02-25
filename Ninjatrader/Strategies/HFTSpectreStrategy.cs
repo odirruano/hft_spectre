@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
 using NinjaTrader.Cbi;
+using NinjaTrader.Gui;
 using NinjaTrader.Gui.NinjaScript;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.Data;
@@ -332,8 +333,8 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             int len = Math.Max(2, LevelLineBars);
 
-            Draw.Line(this, tpTag, false, len, tp, 0, tp, Brushes.Lime, null, 2);
-            Draw.Line(this, slTag, false, len, sl, 0, sl, Brushes.Red, null, 2);
+            Draw.Line(this, tpTag, false, len, tp, 0, tp, Brushes.Lime, DashStyleHelper.Solid, 2);
+            Draw.Line(this, slTag, false, len, sl, 0, sl, Brushes.Red,  DashStyleHelper.Solid, 2);
 
             int killId = id - MaxPlottedSignals;
             if (killId > 0)
