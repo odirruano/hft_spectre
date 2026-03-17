@@ -511,7 +511,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             double ask = GetCurrentAsk();
 
             string ts = DateTime.UtcNow.ToString("o");
-            string barTime = Time[0].ToString("o");
+            string barTime = Time[1].ToString("o");
 
             string msg =
                 "{" +
@@ -519,11 +519,11 @@ namespace NinjaTrader.NinjaScript.Strategies
                 $"\"symbol\":\"{Instrument.FullName}\"," +
                 "\"bar\":{" +
                 $"\"time\":\"{barTime}\"," +
-                $"\"open\":{Open[0].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
-                $"\"high\":{High[0].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
-                $"\"low\":{Low[0].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
-                $"\"close\":{Close[0].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
-                $"\"volume\":{Volume[0]}" +
+                $"\"open\":{Open[1].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
+                $"\"high\":{High[1].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
+                $"\"low\":{Low[1].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
+                $"\"close\":{Close[1].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
+                $"\"volume\":{Volume[1]}" +
                 "}," +
                 $"\"bid\":{bid.ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
                 $"\"ask\":{ask.ToString(System.Globalization.CultureInfo.InvariantCulture)}" +
@@ -581,21 +581,21 @@ namespace NinjaTrader.NinjaScript.Strategies
             {
                 if (ArmLong)
                 {
-                    double hh = MAX(High, TrendLookback)[1];
-                    double curRange = High[0] - Low[0];
-                    double ar = avgRange[0];
+                    double hh = MAX(High, TrendLookback)[2];
+                    double curRange = High[1] - Low[1];
+                    double ar = avgRange[1];
 
-                    if (Close[0] > hh && curRange > ar * TrendRangeMult)
+                    if (Close[1] > hh && curRange > ar * TrendRangeMult)
                         wantLong = true;
                 }
 
                 if (ArmShort)
                 {
-                    double ll = MIN(Low, TrendLookback)[1];
-                    double curRange = High[0] - Low[0];
-                    double ar = avgRange[0];
+                    double ll = MIN(Low, TrendLookback)[2];
+                    double curRange = High[1] - Low[1];
+                    double ar = avgRange[1];
 
-                    if (Close[0] < ll && curRange > ar * TrendRangeMult)
+                    if (Close[1] < ll && curRange > ar * TrendRangeMult)
                         wantShort = true;
                 }
             }
@@ -603,16 +603,16 @@ namespace NinjaTrader.NinjaScript.Strategies
             // MEAN_REVERTING signals: re-entry to EMA band (más frecuente)
             if (lastRegime == "MEAN_REVERTING")
             {
-                double mean = emaMean[0];
-                double dev = atrMean[0] * MeanAtrMult;
+                double mean = emaMean[1];
+                double dev = atrMean[1] * MeanAtrMult;
 
                 double lower = mean - dev;
                 double upper = mean + dev;
 
-                if (ArmLong && Close[1] < lower && Close[0] >= lower)
+                if (ArmLong && Close[2] < lower && Close[1] >= lower)
                     wantLong = true;
 
-                if (ArmShort && Close[1] > upper && Close[0] <= upper)
+                if (ArmShort && Close[2] > upper && Close[1] <= upper)
                     wantShort = true;
             }
 
@@ -631,9 +631,9 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (canTrade && Position.MarketPosition == MarketPosition.Flat)
             {
                 if (wantLong)
-                    PlotTradeLevels("SIG_LONG", Close[0], true);
+                    PlotTradeLevels("SIG_LONG", Close[1], true);
                 else if (wantShort)
-                    PlotTradeLevels("SIG_SHORT", Close[0], false);
+                    PlotTradeLevels("SIG_SHORT", Close[1], false);
             }
 
             // ===== Execution (only if enabled) =====
